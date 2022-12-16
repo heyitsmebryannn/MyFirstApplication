@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-public class Login extends JFrame {
+public class Login extends JDialog {
     JPanel panelTitle,panelImage,panelCredentials,panelFooter;
     JLabel lblTitle,lblImage,lblUsername,lblPassword,lblPosition,lblLogin,lblFooter;
     JTextField txtUsername;
@@ -27,7 +27,7 @@ public class Login extends JFrame {
     PreparedStatement preparedStatement;
     public Login(){
         setTitle("Apartment Management System");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setSize(700,500);
         setResizable(false);
         setLocationRelativeTo(null);

@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 public class MainFrame extends JFrame {
    JButton btnViewUser,btnUtilities,btnMaintenance,btnTransaction,btnAbout,btnContact,btnInventory;
    JButton btnAptOne,btnAptTwo,btnAptThree,btnAptFour,btnAptFive,btnAptSix,btnAptSeven,btnAptEight;
-   ImageIcon viewUserIcon,utilitiesIcon,maintenanceIcon,transactionIcon,aboutIcon,contactIcon,inventoryIcon;
    JMenuBar menuBar;
    JMenu fileMenu;
    JMenuItem logoutMenu;
@@ -49,19 +48,19 @@ public class MainFrame extends JFrame {
         add(panelMenu,BorderLayout.NORTH);
 
         btnViewUser = new JButton();
-        menuItem(btnViewUser,viewUserIcon,"user.png","View User");
+        menuItem(btnViewUser,"user.png","View User");
         btnUtilities = new JButton();
-        menuItem(btnUtilities,utilitiesIcon,"home.png","Utilities");
+        menuItem(btnUtilities,"home.png","Utilities");
         btnMaintenance = new JButton();
-        menuItem(btnMaintenance,maintenanceIcon,"settings.png","Maintenance");
+        menuItem(btnMaintenance,"settings.png","Maintenance");
         btnTransaction = new JButton();
-        menuItem(btnTransaction,transactionIcon,"transaction.png","<html><center>Transaction <br>Report</center></html>");
+        menuItem(btnTransaction,"transaction.png","<html><center>Transaction <br>Report</center></html>");
         btnInventory = new JButton();
-        menuItem(btnInventory,inventoryIcon,"inventory.png","Inventory");
+        menuItem(btnInventory,"inventory.png","Inventory");
         btnAbout = new JButton();
-        menuItem(btnAbout,aboutIcon,"information.png","About");
+        menuItem(btnAbout,"information.png","About");
         btnContact = new JButton();
-        menuItem(btnContact,contactIcon,"support.png","<html>Contact <br>Support</html>");
+        menuItem(btnContact,"support.png","<html>Contact <br>Support</html>");
 
         btnViewUser.addActionListener(e -> new UserInfo().setVisible(true));
 
@@ -106,11 +105,10 @@ public class MainFrame extends JFrame {
         panelFooter.add(lblFooter);
 
 }
-    private void menuItem(JButton jButton,ImageIcon imageIcon,String image,String text){
+    private void menuItem(JButton jButton,String image,String text){
         jButton.setText(text);
         jButton.setPreferredSize(new Dimension(100,50));
-        imageIcon = new ImageIcon(new ImageIcon("asset/images/"+image).getImage().getScaledInstance(30,30,Image.SCALE_SMOOTH));
-        jButton.setIcon(imageIcon);
+        jButton.setIcon(new ImageIcon(new ImageIcon("asset/images/"+image).getImage().getScaledInstance(30,30,Image.SCALE_SMOOTH)));
         jButton.setFont(new Font("Arial",Font.BOLD,12));
         jButton.setBackground(new Color(210, 167, 137));
         jButton.setFocusable(false);
@@ -141,11 +139,4 @@ public class MainFrame extends JFrame {
         });
         panelMain.add(jButton);
     }
-
-
-
-    public static void main(String[] args) {
-        new MainFrame().setVisible(true);
-    }
-
 }

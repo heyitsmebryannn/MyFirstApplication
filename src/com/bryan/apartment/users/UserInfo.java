@@ -15,11 +15,11 @@ import java.sql.SQLException;
 
 public class UserInfo extends JDialog {
     JPanel panelTitle,panelMain,panelCategory;
-    JButton btnAdd,btnUpdate,btnDelete,btnSearch;
+    JButton btnAdd,btnUpdate,btnDelete;
     JTextField txtSearch;
     JPanel panelSearch,panelTable;
 
-    JLabel lblTitle;
+    JLabel lblTitle, lblSearch;
     JScrollPane scrollPane;
     UserListTable userListTable;
 
@@ -95,12 +95,14 @@ public class UserInfo extends JDialog {
         });
         panelSearch.add(txtSearch);
 
-        btnSearch = new JButton();
-        btnSearch.setPreferredSize(new Dimension(150,30));
-        btnSearch.setText("Search");
-        btnSearch.setFocusable(false);
-        btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        panelSearch.add(btnSearch);
+        lblSearch = new JLabel();
+        lblSearch.setPreferredSize(new Dimension(150,30));
+        lblSearch.setText("Search");
+        lblSearch.setHorizontalTextPosition(SwingConstants.CENTER);
+        lblSearch.setHorizontalTextPosition(SwingConstants.CENTER);
+        lblSearch.setFont(new Font("Arial",Font.BOLD,15));
+        lblSearch.setFocusable(false);
+        panelSearch.add(lblSearch);
 
         userListTable= new UserListTable();
         panelTable = new JPanel();
