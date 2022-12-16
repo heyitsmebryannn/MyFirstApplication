@@ -1,4 +1,4 @@
-package com.bryan.apartment.login.database;
+package com.bryan.apartment.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

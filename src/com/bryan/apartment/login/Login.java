@@ -1,5 +1,6 @@
 package com.bryan.apartment.login;
-import com.bryan.apartment.login.database.ConnectDatabase;
+import com.bryan.apartment.database.ConnectDatabase;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
