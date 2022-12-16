@@ -2,6 +2,8 @@ package com.bryan.apartment.login;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainFrame extends JFrame {
    JButton btnViewUser,btnUtilities,btnMaintenance,btnTransaction,btnAbout,btnContact,btnInventory;
@@ -56,6 +58,7 @@ public class MainFrame extends JFrame {
         panelMain.setPreferredSize(new Dimension(800,500));
         panelMain.setBackground(new Color(0xD4BBA3));
         panelMain.setLayout(new GridLayout(2,4,20,20));
+        panelMain.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         add(panelMain,BorderLayout.CENTER);
 
         btnApartment(btnAptOne,"Apartment 1");
@@ -94,16 +97,30 @@ public class MainFrame extends JFrame {
         jButton.setFocusable(false);
         jButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         jButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        jButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         panelMenu.add(jButton);
     }
     private void btnApartment(JButton jButton,String text){
         jButton = new JButton();
         jButton.setText(text);
-        jButton.setFont(new Font("Arial",Font.BOLD,12));
-//        jButton.setBackground(new Color(210, 167, 137));
+        jButton.setFont(new Font("Arial",Font.BOLD,15));
+        jButton.setBackground(new Color(0xD4BBA3));
+        jButton.setIcon(new ImageIcon(new ImageIcon("asset/images/apartment.png").getImage().getScaledInstance(70,70,Image.SCALE_SMOOTH)));
         jButton.setFocusable(false);
         jButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         jButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        jButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton finalJButton = jButton;
+        jButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                finalJButton.setBackground(new Color(0xC4915E));
+            }
+            @Override
+            public void mouseExited(MouseEvent e){
+                finalJButton.setBackground(new Color(0xD4BBA3));
+            }
+        });
         panelMain.add(jButton);
     }
 
