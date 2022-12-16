@@ -220,6 +220,7 @@ public class AddUser extends JDialog {
                             preparedStatement.execute();
                             JOptionPane.showMessageDialog(null,"User Added Successfully","Added User",JOptionPane.INFORMATION_MESSAGE);
                             this.dispose();
+                            new UserInfo().setVisible(true);
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
