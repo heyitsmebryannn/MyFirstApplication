@@ -1,5 +1,7 @@
 package com.bryan.apartment.login;
 
+import com.bryan.apartment.users.UserInfo;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -46,13 +48,23 @@ public class MainFrame extends JFrame {
         panelMenu.setLayout(new GridLayout(1,10,0,0));
         add(panelMenu,BorderLayout.NORTH);
 
+        btnViewUser = new JButton();
         menuItem(btnViewUser,viewUserIcon,"user.png","View User");
+        btnUtilities = new JButton();
         menuItem(btnUtilities,utilitiesIcon,"home.png","Utilities");
+        btnMaintenance = new JButton();
         menuItem(btnMaintenance,maintenanceIcon,"settings.png","Maintenance");
+        btnTransaction = new JButton();
         menuItem(btnTransaction,transactionIcon,"transaction.png","<html><center>Transaction <br>Report</center></html>");
+        btnInventory = new JButton();
         menuItem(btnInventory,inventoryIcon,"inventory.png","Inventory");
+        btnAbout = new JButton();
         menuItem(btnAbout,aboutIcon,"information.png","About");
+        btnContact = new JButton();
         menuItem(btnContact,contactIcon,"support.png","<html>Contact <br>Support</html>");
+
+        btnViewUser.addActionListener(e -> new UserInfo().setVisible(true));
+
 
         panelMain = new JPanel();
         panelMain.setPreferredSize(new Dimension(800,500));
@@ -61,13 +73,21 @@ public class MainFrame extends JFrame {
         panelMain.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         add(panelMain,BorderLayout.CENTER);
 
+        btnAptOne = new JButton();
         btnApartment(btnAptOne,"Apartment 1");
+        btnAptTwo = new JButton();
         btnApartment(btnAptTwo,"Apartment 2");
+        btnAptThree = new JButton();
         btnApartment(btnAptThree,"Apartment 3");
+        btnAptFour = new JButton();
         btnApartment(btnAptFour,"Apartment 4");
+        btnAptFive = new JButton();
         btnApartment(btnAptFive,"Apartment 5");
+        btnAptSix = new JButton();
         btnApartment(btnAptSix,"Apartment 6");
+        btnAptSeven = new JButton();
         btnApartment(btnAptSeven,"Apartment 7");
+        btnAptEight = new JButton();
         btnApartment(btnAptEight,"Apartment 8");
 
 
@@ -87,7 +107,6 @@ public class MainFrame extends JFrame {
 
 }
     private void menuItem(JButton jButton,ImageIcon imageIcon,String image,String text){
-        jButton = new JButton();
         jButton.setText(text);
         jButton.setPreferredSize(new Dimension(100,50));
         imageIcon = new ImageIcon(new ImageIcon("asset/images/"+image).getImage().getScaledInstance(30,30,Image.SCALE_SMOOTH));
@@ -101,7 +120,7 @@ public class MainFrame extends JFrame {
         panelMenu.add(jButton);
     }
     private void btnApartment(JButton jButton,String text){
-        jButton = new JButton();
+
         jButton.setText(text);
         jButton.setFont(new Font("Arial",Font.BOLD,15));
         jButton.setBackground(new Color(0xD4BBA3));
@@ -110,15 +129,14 @@ public class MainFrame extends JFrame {
         jButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         jButton.setHorizontalTextPosition(SwingConstants.CENTER);
         jButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        JButton finalJButton = jButton;
         jButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                finalJButton.setBackground(new Color(0xC4915E));
+                jButton.setBackground(new Color(0xC4915E));
             }
             @Override
             public void mouseExited(MouseEvent e){
-                finalJButton.setBackground(new Color(0xD4BBA3));
+                jButton.setBackground(new Color(0xD4BBA3));
             }
         });
         panelMain.add(jButton);
