@@ -25,6 +25,8 @@ public class Login extends JDialog {
 
     Connection connection;
     PreparedStatement preparedStatement;
+    static String fullName;
+    static String userPosition;
     public Login(){
         setTitle("Apartment Management System");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -175,8 +177,11 @@ public class Login extends JDialog {
 
                 if(resultSet.next()){
                     JOptionPane.showMessageDialog(null,"Login Successfully","Success",JOptionPane.INFORMATION_MESSAGE);
+                    fullName = resultSet.getString("fullName");
+                    userPosition = resultSet.getString("position");
                     this.dispose();
                     new MainFrame().setVisible(true);
+
                 }
                 else{
                     JOptionPane.showMessageDialog(null,"Username or Password Incorrect","Login Failed",JOptionPane.ERROR_MESSAGE);

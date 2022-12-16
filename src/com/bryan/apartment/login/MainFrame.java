@@ -11,10 +11,12 @@ public class MainFrame extends JFrame {
    JButton btnViewUser,btnUtilities,btnMaintenance,btnTransaction,btnAbout,btnContact,btnInventory;
    JButton btnAptOne,btnAptTwo,btnAptThree,btnAptFour,btnAptFive,btnAptSix,btnAptSeven,btnAptEight;
    JMenuBar menuBar;
-   JMenu fileMenu;
+   JMenu fileMenu,exitMenu,minimizeMenu;
    JMenuItem logoutMenu;
-   JPanel panelMenu,panelMain,panelFooter;
-   JLabel lblFooter;
+   JPanel panelMenu,panelMain,panelMainTitle,panelMainApt,panelFooter;
+   JLabel lblFooter, lblClock,lblDate, lblPosition,lblName;
+
+
 
     public MainFrame(){
         super("Main Frame");
@@ -25,6 +27,7 @@ public class MainFrame extends JFrame {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
         menuBar = new JMenuBar();
+        menuBar.setBackground(new Color(131, 131, 131));
         setJMenuBar(menuBar);
         setUIComponents();
 
@@ -33,6 +36,51 @@ public class MainFrame extends JFrame {
     private void setUIComponents(){
         fileMenu = new JMenu("File");
         menuBar.add(fileMenu);
+        menuBar.add(Box.createGlue());
+        minimizeMenu = new JMenu("__");
+        minimizeMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        minimizeMenu.setOpaque(true);
+        minimizeMenu.setBackground(new Color(131, 131, 131));
+
+        minimizeMenu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                setState(JFrame.ICONIFIED);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                minimizeMenu.setBackground(new Color(192, 192, 192));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                minimizeMenu.setBackground(new Color(131, 131, 131));
+            }
+        });
+        menuBar.add(minimizeMenu);
+        exitMenu = new JMenu("X");
+        exitMenu.setOpaque(true);
+        exitMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        exitMenu.setBackground(new Color(131, 131, 131));
+        menuBar.add(exitMenu);
+        exitMenu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int result = JOptionPane.showConfirmDialog(null,"Are you sure you want to exit?","Confirm Exit",JOptionPane.YES_NO_OPTION);
+                if (result == 0){
+                    System.exit(0);
+                }
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                exitMenu.setBackground(Color.RED);
+            }
+            @Override
+            public void mouseExited(MouseEvent e){
+                exitMenu.setBackground(new Color(131, 131, 131));
+            }
+        });
 
         logoutMenu = new JMenuItem("Log out");
         fileMenu.add(logoutMenu);
@@ -68,9 +116,52 @@ public class MainFrame extends JFrame {
         panelMain = new JPanel();
         panelMain.setPreferredSize(new Dimension(800,500));
         panelMain.setBackground(new Color(0xD4BBA3));
-        panelMain.setLayout(new GridLayout(2,4,20,20));
-        panelMain.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        panelMain.setLayout(new BorderLayout());
+
         add(panelMain,BorderLayout.CENTER);
+
+        panelMainTitle = new JPanel();
+        panelMainTitle.setPreferredSize(new Dimension(800,60));
+        panelMainTitle.setLayout(new GridLayout(2,2));
+        panelMainTitle.setBorder(BorderFactory.createEmptyBorder(5,25,5,20));
+        panelMainTitle.setBackground(new Color(0xD4BBA3));
+        panelMain.add(panelMainTitle,BorderLayout.NORTH);
+
+        lblName = new JLabel();
+        lblName.setText("Good Day " + Login.fullName+"!");
+        lblName.setPreferredSize(new Dimension(200,20));
+        lblName.setFont(new Font("Arial",Font.BOLD,15));
+        lblName.setHorizontalTextPosition(SwingConstants.LEFT);
+        panelMainTitle.add(lblName);
+
+        lblDate = new JLabel();
+        lblDate.setText("MM/DD/YYYY");
+        lblDate.setPreferredSize(new Dimension(200,20));
+        lblDate.setFont(new Font("Arial",Font.BOLD,15));
+        panelMainTitle.add(lblDate);
+
+        lblPosition = new JLabel();
+        lblPosition.setText(Login.userPosition);
+        lblPosition.setPreferredSize(new Dimension(200,20));
+        lblPosition.setHorizontalTextPosition(SwingConstants.LEFT);
+        lblPosition.setFont(new Font("Arial",Font.BOLD,15));
+        panelMainTitle.add(lblPosition);
+
+        lblClock = new JLabel();
+        lblClock.setText("2:20:20 AM");
+        lblClock.setPreferredSize(new Dimension(200,20));
+        lblClock.setFont(new Font("Arial",Font.BOLD,15));
+        panelMainTitle.add(lblClock);
+        
+
+
+        panelMainApt = new JPanel();
+        panelMainApt.setPreferredSize(new Dimension(800,500));
+        panelMainApt.setBackground(new Color(0xD4BBA3));
+        panelMainApt.setLayout(new GridLayout(2,4,20,20));
+        panelMainApt.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        panelMain.add(panelMainApt,BorderLayout.CENTER);
+
 
         btnAptOne = new JButton();
         btnApartment(btnAptOne,"Apartment 1");
@@ -137,6 +228,6 @@ public class MainFrame extends JFrame {
                 jButton.setBackground(new Color(0xD4BBA3));
             }
         });
-        panelMain.add(jButton);
+        panelMainApt.add(jButton);
     }
 }
