@@ -1,10 +1,17 @@
 package com.bryan.apartment.users;
 
+import com.bryan.apartment.database.ConnectDatabase;
+
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserInfo extends JDialog {
     JPanel panelTitle,panelMain,panelCategory;
@@ -14,6 +21,7 @@ public class UserInfo extends JDialog {
 
     JLabel lblTitle;
     JScrollPane scrollPane;
+    UserListTable userListTable;
 
 
     public UserInfo(){
@@ -27,6 +35,7 @@ public class UserInfo extends JDialog {
         setUIComponents();
     }
     private void setUIComponents(){
+
         panelTitle = new JPanel();
         panelTitle.setPreferredSize(new Dimension(800,50));
         panelTitle.setBackground(new Color(210, 167, 137));
@@ -57,8 +66,10 @@ public class UserInfo extends JDialog {
         });
         btnUpdate = new JButton();
         btnSets(btnUpdate, "Update User");
+        btnUpdate.addActionListener(e-> updateUser());
         btnDelete = new JButton();
         btnSets(btnDelete,"Delete User");
+        btnDelete.addActionListener(e-> deleteUser());
 
         panelMain = new JPanel();
         panelMain.setPreferredSize(new Dimension(450,550));
@@ -76,6 +87,12 @@ public class UserInfo extends JDialog {
         txtSearch = new JTextField();
         txtSearch.setPreferredSize(new Dimension(300,30));
         txtSearch.setFont(new Font("Arial",Font.BOLD,15));
+        txtSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                searchUser();
+            }
+        });
         panelSearch.add(txtSearch);
 
         btnSearch = new JButton();
@@ -85,6 +102,7 @@ public class UserInfo extends JDialog {
         btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
         panelSearch.add(btnSearch);
 
+        userListTable= new UserListTable();
         panelTable = new JPanel();
         panelTable.setPreferredSize(new Dimension(450,500));
         panelTable.setOpaque(false);
@@ -93,7 +111,6 @@ public class UserInfo extends JDialog {
         panelMain.add(panelTable,BorderLayout.CENTER);
 
 
-        UserListTable userListTable = new UserListTable();
         scrollPane = new JScrollPane(userListTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setPreferredSize(new Dimension(450,400));
         panelTable.add(scrollPane);
@@ -119,6 +136,56 @@ public class UserInfo extends JDialog {
             }
         });
         panelCategory.add(btn);
+    }
+    private void updateUser(){
+        try {
+            int selectedRow = userListTable.getSelectedRow();
+            System.out.println(selectedRow);
+            Connection connection = ConnectDatabase.getConnection();
+            String userID = userListTable.getValueAt(selectedRow,0).toString();
+            assert connection != null;
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users where user_ID ='"+userID+"'");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()){
+                UpdateUser updateUser = new UpdateUser();
+                updateUser.txtFullName.setText(resultSet.getString("fullName"));
+                updateUser.txtContact.setText(resultSet.getString("Contact_No"));
+                updateUser.txtUsername.setText(resultSet.getString("username"));
+                updateUser.cmbPosition.setSelectedItem(resultSet.getString("position"));
+                this.dispose();
+                updateUser.setVisible(true);
+            }
+        }catch (ArrayIndexOutOfBoundsException exception){
+            JOptionPane.showMessageDialog(null,"Please select a user you want to update!","Select user",JOptionPane.WARNING_MESSAGE);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void searchUser(){
+        String search = txtSearch.getText();
+        ShowUser showUser = new ShowUser();
+        showUser.searchUser(search,userListTable);
+    }
+    private void deleteUser(){
+        int result = JOptionPane.showConfirmDialog(null,"Are you sure you want to delete this user?","Confirm Delete",JOptionPane.YES_NO_OPTION);
+        if(result == 0){
+            try{
+                int selectedRow = userListTable.getSelectedRow();
+                String userID = userListTable.getValueAt(selectedRow,0).toString();
+                String deleteQuery = "DELETE FROM users where user_ID = '"+userID+"'";
+                Connection connection = ConnectDatabase.getConnection();
+                assert connection != null;
+                PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
+                preparedStatement.execute();
+                JOptionPane.showMessageDialog(null,"User Deleted Successfully!","Deleted User",JOptionPane.INFORMATION_MESSAGE);
+                new ShowUser().showDataOnTable(userListTable);
+            }catch (ArrayIndexOutOfBoundsException exception){
+                JOptionPane.showMessageDialog(null, "Please select a user you want to Delete","Delete User",JOptionPane.WARNING_MESSAGE);
+            }catch (SQLException exception){
+                exception.printStackTrace();
+            }
+        }
     }
 
 

@@ -7,23 +7,21 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class AddUser extends JDialog {
+public class UpdateUser extends JDialog {
+
     JPanel panelTitle,panelMain;
     JLabel lblTitle,lblFullName,lblContact,lblUsername,lblPassword,lblConfirmPassword,lblPosition;
     JTextField txtUsername,txtFullName,txtContact;
     JPasswordField txtPassword,txtConfirmPassword;
     JComboBox<String> cmbPosition;
-    JButton btnAdd;
+    JButton btnUpdate;
     String[] position = {"Admin","Co-Admin","Manager"};
     Font font = new Font("Arial",Font.BOLD,15);
 
-    public AddUser(){
+    public UpdateUser(){
         setTitle("Add User");
         setSize(400,600);
         setModal(true);
@@ -62,14 +60,14 @@ public class AddUser extends JDialog {
         panelMain.setBorder(BorderFactory.createEmptyBorder(30,70,0,20));
         panelMain.setBackground(new Color(0xD4BBA3));
         add(panelMain,BorderLayout.CENTER);
-        
+
         lblFullName = new JLabel();
         lblFullName.setText("Full Name");
         lblFullName.setFont(font);
         lblFullName.setVerticalAlignment(SwingConstants.BOTTOM);
         lblFullName.setPreferredSize(new Dimension(250,30));
         panelMain.add(lblFullName);
-        
+
         txtFullName = new JTextField();
         txtFullName.setFont(font);
         txtFullName.setPreferredSize(new Dimension(250,30));
@@ -118,12 +116,7 @@ public class AddUser extends JDialog {
         txtUsername = new JTextField();
         txtUsername.setFont(font);
         txtUsername.setPreferredSize(new Dimension(250,30));
-        txtUsername.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-               txtUsername.setEditable(e.getExtendedKeyCode() != KeyEvent.VK_SPACE);
-            }
-        });
+        txtUsername.setEditable(false);
         panelMain.add(txtUsername);
 
         lblPosition = new JLabel();
@@ -132,7 +125,7 @@ public class AddUser extends JDialog {
         lblPosition.setVerticalAlignment(SwingConstants.BOTTOM);
         lblPosition.setPreferredSize(new Dimension(250,30));
         panelMain.add(lblPosition);
-        
+
         cmbPosition = new JComboBox<>(position);
         cmbPosition.setEditable(false);
         cmbPosition.setFont(font);
@@ -163,94 +156,60 @@ public class AddUser extends JDialog {
         txtConfirmPassword.setPreferredSize(new Dimension(250,30));
         panelMain.add(txtConfirmPassword);
 
-        btnAdd = new JButton();
-        btnAdd.setText("Add");
-        btnAdd.setPreferredSize(new Dimension(250,30));
-        btnAdd.setFont(font);
-        btnAdd.setBackground(new Color(0xD4BBA3));
-        btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnAdd.addMouseListener(new MouseAdapter() {
+        btnUpdate = new JButton();
+        btnUpdate.setText("Update");
+        btnUpdate.setPreferredSize(new Dimension(250,30));
+        btnUpdate.setFont(font);
+        btnUpdate.setBackground(new Color(0xD4BBA3));
+        btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnUpdate.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                btnAdd.setBackground(new Color(0xD09C6D));
+                btnUpdate.setBackground(new Color(0xD09C6D));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btnAdd.setBackground(new Color(0xD4BBA3));
+                btnUpdate.setBackground(new Color(0xD4BBA3));
             }
         });
-        btnAdd.addActionListener(e-> addUser());
+        btnUpdate.addActionListener(e-> updateUser());
 
-        panelMain.add(btnAdd);
+        panelMain.add(btnUpdate);
     }
-
-    private void addUser(){
-        String username = txtUsername.getText();
+    private void updateUser(){
         String fullName = txtFullName.getText();
         String contact = txtContact.getText();
-        String position = Objects.requireNonNull(cmbPosition.getSelectedItem()).toString();
+        String username = txtUsername.getText();
         String password = txtPassword.getText();
+        String position = Objects.requireNonNull(cmbPosition.getSelectedItem()).toString();
         String confirmPassword = txtConfirmPassword.getText();
 
-       String specialChar = "[~!@#$%^&*()_+{}\\[\\]:;,.<>/?-]";
-        Pattern pattern = Pattern.compile(specialChar);
-        Matcher matcher  = pattern.matcher(txtUsername.getText());
-
-
-
-        if(username.isEmpty() || fullName.isEmpty() || contact.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
+        if (fullName.isEmpty() || contact.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             JOptionPane.showMessageDialog(null,"Please Fill Out Empty Field!","Add User Failed",JOptionPane.WARNING_MESSAGE);
+
         }
-        else {
+        else{
             if(!password.equals(confirmPassword)){
                 JOptionPane.showMessageDialog(null,"Password not match!","Add User Failed",JOptionPane.WARNING_MESSAGE);
+
             }
-            else{
-                if(checkUsername(username)){
-                    JOptionPane.showMessageDialog(null,"Username already used!","Add User Failed",JOptionPane.WARNING_MESSAGE);
-                }
-                else {
-                    if(matcher.find()){
-                        JOptionPane.showMessageDialog(null,"Username must not have any special character!","Add User Failed",JOptionPane.WARNING_MESSAGE);
-                    }
-                    else{
-                        String addUserQuery = "INSERT INTO users (`fullName`,`Contact_No`,`username`,`password`,`position`) VALUES ('"+fullName+"','"+contact+"','"+username+"','"+password+"','"+position+"')";
+            else {
+                String updateQuery = "UPDATE users SET fullName = '"+fullName+"', contact_no = '"+contact+"', password = '"+password+"', position = '"+position+"' where username = '"+username+"'";
 
-                        Connection connection = ConnectDatabase.getConnection();
-                        try {
-                            assert connection != null;
-                            PreparedStatement preparedStatement = connection.prepareStatement(addUserQuery);
-                            preparedStatement.execute();
-                            JOptionPane.showMessageDialog(null,"User Added Successfully","Added User",JOptionPane.INFORMATION_MESSAGE);
-                            this.dispose();
-                            new UserInfo().setVisible(true);
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-
+                Connection connection = ConnectDatabase.getConnection();
+                try {
+                    assert connection != null;
+                    PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
+                    preparedStatement.execute();
+                    JOptionPane.showMessageDialog(null,"User Updated Successfully!","Updated User",JOptionPane.INFORMATION_MESSAGE);
+                    this.setVisible(false);
+                    new UserInfo().setVisible(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
 
-    }
-    private boolean checkUsername(String username){
-        String checkQuery = "SELECT username from users where binary username ='"+username+"'";
-        Connection connection = ConnectDatabase.getConnection();
-        boolean checkUsername = false;
-        try {
-            assert connection != null;
-            PreparedStatement preparedStatement = connection.prepareStatement(checkQuery);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if(resultSet.next()){
-                checkUsername = true;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return checkUsername;
     }
 }
